@@ -39,7 +39,7 @@ b. It wouldn’t get removed because it’s not a directory (OldFiles)
 11. ```bash
       man -k '^read'
       ````
-Lists all commands whose description starts with "read".
+   Lists all commands whose description starts with "read".
 
 12. `apropos` command is similar to `man -k [keyword]`; it searches the man page descriptions for a given keyword.
 
