@@ -12,19 +12,40 @@
 
    ```bash
    rmdir [OPTION]... DIRECTORY...
-   ```
+   ````
 
    Removes empty directories.
+4. ```bash
+   mkdir -p dir1/dir11 dir1/dir12
+   cd /dir1/dir11
+   touch file1
+   ````
+   
+   ```bash
+   mkdir /docs/
+   cd /docs
+   touch mycv
+   ````
 
+   ```bash
+   mkdir /Documents
+   cd /Documents
+   touch OldFiles
+   ````
+   
 a. Couldn't remove directory because it isn’t empty → overcome it by using `-rf` (force) with `rm`
 
 b. It wouldn’t get removed because it’s not a directory (OldFiles)
 
 
-5. Absolute path: `/home/user/docs/mycv`
+c. Absolute path: `/home/user/docs/mycv`
    Relative path: `~/docs/mycv`
 
-
+5. ```bash
+   cp /etc/passwd /home
+   mv passwd oldpasswd
+   ````
+   
 6. ```bash
    cd ~
    cd /home
