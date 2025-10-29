@@ -17,20 +17,17 @@
    Removes empty directories.
 4. ```bash
    mkdir -p dir1/dir11 dir1/dir12
-   cd /dir1/dir11
-   touch file1
+   touch dir1/dir11/file1
    ````
    
    ```bash
    mkdir /docs/
-   cd /docs
-   touch mycv
+   touch /docs/mycv
    ````
 
    ```bash
    mkdir /Documents
-   cd /Documents
-   touch OldFiles
+   touch /Documents/OldFiles
    ````
    
 a. Couldn't remove directory because it isn’t empty → overcome it by using `-rf` (force) with `rm`
