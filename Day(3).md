@@ -105,7 +105,7 @@ sudo ln /etc/passwd /boot
 
 > I could, but I’m not sure I was supposed to. I checked using `lsblk` and my root and boot aren’t on the same memory block.
 
-9. `>` is the value of the environment variable `PS2` (the secondary prompt) when Bash expects more input.
+9. `>` is the value of the environment variable `PS1` when Bash expects more input.
    It can be changed in `.bashrc`:
 
 ```bash
