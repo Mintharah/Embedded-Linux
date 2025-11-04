@@ -9,7 +9,6 @@ int main(int argc, char *argv[])
 {
     const char *path = "/sys/class/leds/input7::capslock/brightness";
     int fd = open(path, O_RDWR);
-
     if (argc > 1)
     {
         if (strcmp(argv[1], "1") == 0)
@@ -25,7 +24,6 @@ int main(int argc, char *argv[])
         }
     }
     else{}
-
     close(fd);
     return 0;
 }
