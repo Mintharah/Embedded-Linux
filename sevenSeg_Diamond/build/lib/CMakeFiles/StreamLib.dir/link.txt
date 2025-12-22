@@ -1,0 +1,2 @@
+/usr/bin/ar qc libStreamLib.a CMakeFiles/StreamLib.dir/src/GPIO.cpp.o CMakeFiles/StreamLib.dir/src/iStream.cpp.o CMakeFiles/StreamLib.dir/src/sevenSegmentOutput.cpp.o CMakeFiles/StreamLib.dir/src/Terminal.cpp.o
+/usr/bin/ranlib libStreamLib.a

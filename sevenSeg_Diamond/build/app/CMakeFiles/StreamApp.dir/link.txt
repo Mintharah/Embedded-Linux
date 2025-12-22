@@ -1,0 +1,1 @@
+/usr/bin/g++ CMakeFiles/StreamApp.dir/main.cpp.o -o StreamApp  ../lib/libStreamLib.a 
