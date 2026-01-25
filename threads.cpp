@@ -11,8 +11,6 @@
 std::mutex mx;
 std::condition_variable cv;
 
-bool change = false;
-
 void capslockLoop(void) {
   std::unique_lock uL(mx);
   int fd = open("/sys/class/leds/input7::capslock/brightness", O_RDONLY);
