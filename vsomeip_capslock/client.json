@@ -1,0 +1,10 @@
+{
+  "unicast": "127.0.0.1",
+
+  "applications": [
+    {
+      "name": "capslock_client",
+      "id": "0x02"
+    }
+  ]
+}

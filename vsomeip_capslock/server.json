@@ -1,0 +1,19 @@
+{
+  "unicast": "127.0.0.1",
+  "routing": "capslock_server",
+
+  "applications": [
+    {
+      "name": "capslock_server",
+      "id": "0x01"
+    }
+  ],
+
+  "services": [
+    {
+      "service": "0x1234",
+      "instance": "0x5678",
+      "reliable": "30509"
+    }
+  ]
+}
