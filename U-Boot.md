@@ -1,4 +1,4 @@
-Part A: U-Boot build and deployment
+##Part A: U-Boot build and deployment
 
 1- a bootloader is a program that runs immediately after reset or power-on and often initializes the basic hardware, checks if new firmware is available, programs the firmware into flash memory and jumps to the main application.
 
@@ -71,7 +71,8 @@ it is loaded by the start.elf before uboot start executing and is passed to the 
 8- the linux kernel reads the partition table (MBR) stored at the beginning of the image file and contains the starting sectors and sizes of the partitions. using this info it calculates the offsets and creates devices like /dev/loop9p1 and /dev/loop9p2.
 
 
-Part B: U-Boot commands environment
+##Part B: U-Boot commands environment
+
 1- bdinfo: displays board information
 it shows:
 RAM start address & size
