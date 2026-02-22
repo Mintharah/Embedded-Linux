@@ -98,3 +98,13 @@ run qemu:
 qemu-system-arm -M vexpress-a9 -kernel u-boot -nographic
 
 6- in menuconfig, edit command line interface -> shell prompt to display your name in the prompt
+
+7- /usr/sbin/in.tftpd --listen --user tftp --address :69 --secure --create /srv/tftp
+  restart: sudo systemctl restart tftpd-hpa
+  check status: sudo systemctl status tftpd-hpa
+  copy image and dtb to /srv/tftp
+  in qemu:
+  set client address: setenv ipaddr 10.0.2.50
+  set server address: setenv serverip 10.0.2.2
+  ping the server: ping 10.0.2.2 "host 10.0.2.2 is alive"
+  
