@@ -1,5 +1,5 @@
 ### Screenshot
-![screenshot](Embedded-Linux/images/initramfs.png)
+![screenshot]([Embedded-Linux/images/initramfs.png](https://github.com/Mintharah/Embedded-Linux/blob/main/images/initramfs.png))
 
 ### Questions
 1) a temporary in-memory filesystem the kernel unpacks at in boot, used because kernel might need drivers or setup steps before mounting on the real rootfs, it is also faster.
