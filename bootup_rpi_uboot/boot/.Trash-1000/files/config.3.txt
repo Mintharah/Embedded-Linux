@@ -1,6 +1,0 @@
-kernel=u-boot.bin
-arm_64bit=1
-enable_uart=1
-dtoverlay=disable-bt
-gpu_mem=64
-init_uart_baud=115200

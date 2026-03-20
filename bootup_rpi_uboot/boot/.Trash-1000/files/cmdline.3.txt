@@ -1,1 +1,0 @@
-console=ttyAMA1,115200 rdinit=/sbin/init rootwait
