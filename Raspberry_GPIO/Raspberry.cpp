@@ -105,10 +105,16 @@ public:
 
 int main() {
   GPIO pin;
-  int value = -1;
+  //int value = -1;
   pin.GPIO_SetDirection(26, "out");
-  pin.GPIO_SetValue(26, "1");
-  pin.GPIO_ReadValue(26, &value);
+  pin.GPIO_SetValue(26, "0");
+  //pin.GPIO_ReadValue(26, &value);
 
+  while(1){
+      pin.GPIO_SetValue(26, "1");
+      sleep(1);
+      pin.GPIO_SetValue(26, "0");
+      sleep(1);
+  }
   return 0;
 }
