@@ -1,0 +1,177 @@
+#!/bin/sh
+
+# =============================================================
+# /init — initramfs boot selector
+# Options: 1) SD card (mmcblk0p2)   2) NFS root
+# =============================================================
+
+# ---------- Configuration ----------
+SD_DEV="/dev/mmcblk0p2"
+SD_FSTYPE="ext4"
+
+NFS_SERVER="192.168.1.2"
+NFS_PATH="/srv/nfs/rootfs"
+NFS_OPTS="nolock,vers=3,tcp"
+
+DEVICE_IP="192.168.1.50"
+NETMASK="255.255.255.0"
+GATEWAY="192.168.1.1"
+IFACE="eth0"
+# ------------------------------------
+
+NEWROOT="/mnt/root"
+
+echo "========================================="
+echo "  Initramfs starting..."
+echo "========================================="
+
+# 1. Mount virtual filesystems
+mount -t proc  none /proc
+mount -t sysfs none /sys
+mount -t devtmpfs none /dev 2>/dev/null || mount -t tmpfs none /dev
+mount -t tmpfs none /tmp
+
+# 2. Start mdev for hotplug / device detection
+echo /sbin/mdev > /proc/sys/kernel/hotplug
+mdev -s
+
+# 3. Wait for SD card device to appear
+echo ""
+echo "Waiting for SD card..."
+TRIES=0
+while [ ! -b "$SD_DEV" ] && [ $TRIES -lt 30 ]; do
+    sleep 1
+    mdev -s
+    TRIES=$((TRIES + 1))
+done
+
+if [ -b "$SD_DEV" ]; then
+    echo "SD card detected: $SD_DEV"
+else
+    echo "WARNING: SD card NOT detected after timeout."
+fi
+
+# 4. Prompt user for boot choice
+echo ""
+echo "========================================="
+echo "  Select root filesystem:"
+echo "========================================="
+echo "  1) SD Card  ($SD_DEV)"
+echo "  2) NFS      ($NFS_SERVER:$NFS_PATH)"
+echo "========================================="
+echo ""
+
+# Auto-select SD after 10 seconds if no input
+CHOICE=""
+TIMEOUT=10
+echo "Auto-booting SD card in ${TIMEOUT}s..."
+echo -n "Enter choice [1/2]: "
+read -t $TIMEOUT CHOICE
+
+# Default to SD card
+if [ -z "$CHOICE" ]; then
+    CHOICE="1"
+    echo ""
+    echo "No input — defaulting to SD card."
+fi
+
+# 5. Mount chosen root filesystem
+case "$CHOICE" in
+
+    1)
+        echo ""
+        echo ">>> Mounting SD card ($SD_DEV) as root..."
+
+        if [ ! -b "$SD_DEV" ]; then
+            echo "ERROR: $SD_DEV not found. Dropping to shell."
+            exec /bin/sh
+        fi
+
+        mount -t "$SD_FSTYPE" -o rw "$SD_DEV" "$NEWROOT"
+
+        if [ $? -ne 0 ]; then
+            echo "ERROR: Failed to mount $SD_DEV. Dropping to shell."
+            exec /bin/sh
+        fi
+
+        echo "SD card mounted successfully."
+        ;;
+
+    2)
+        echo ""
+        echo ">>> Bringing up network on $IFACE..."
+
+        ip link set lo up
+        ip link set "$IFACE" up
+
+        echo "Waiting for link..."
+        TRIES=0
+        while [ $TRIES -lt 20 ]; do
+            STATUS=$(cat /sys/class/net/$IFACE/carrier 2>/dev/null)
+            if [ "$STATUS" = "1" ]; then
+                echo "Link is UP"
+                break
+            fi
+            sleep 1
+            TRIES=$((TRIES + 1))
+        done
+
+        if [ "$STATUS" != "1" ]; then
+            echo "ERROR: No ethernet link. Check cable."
+            exec /bin/sh
+        fi
+
+        echo ">>> Assigning IP $DEVICE_IP to $IFACE..."
+        ip addr add "$DEVICE_IP/24" dev "$IFACE"
+        ip route add default via "$GATEWAY"
+
+        sleep 2
+
+        echo ">>> Testing connectivity to $NFS_SERVER..."
+        ping -c 2 -W 3 "$NFS_SERVER"
+
+        echo ">>> Mounting NFS root ($NFS_SERVER:$NFS_PATH)..."
+
+        mount -t nfs -o "$NFS_OPTS" \
+              "$NFS_SERVER":"$NFS_PATH" "$NEWROOT"
+
+        if [ $? -ne 0 ]; then
+            echo "ERROR: NFS mount failed. Dropping to shell."
+            echo ""
+            echo "Debug info:"
+            ip addr show "$IFACE"
+            ip route
+            exec /bin/sh
+        fi
+
+        echo "NFS root mounted successfully."
+        ;;
+
+    *)
+        echo "Invalid choice. Dropping to shell."
+        exec /bin/sh
+        ;;
+esac
+
+# 6. Validate the new root has an init
+if [ ! -x "$NEWROOT/sbin/init" ] && \
+   [ ! -x "$NEWROOT/init" ] && \
+   [ ! -L "$NEWROOT/sbin/init" ]; then
+    echo "ERROR: No /sbin/init found on new root. Dropping to shell."
+    exec /bin/sh
+fi
+
+# 7. Clean up virtual filesystems before switch
+umount /proc
+umount /sys
+umount /dev
+umount /tmp
+
+# 8. Switch root
+echo ""
+echo ">>> Switching root to $NEWROOT ..."
+exec switch_root "$NEWROOT" /sbin/init
+
+# If switch_root fails
+echo "ERROR: switch_root failed. Dropping to shell."
+exec /bin/sh
