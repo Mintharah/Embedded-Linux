@@ -2,7 +2,7 @@
 
 int main(){
 
-printf("         ╱|、\n"
+printf("         ╱|、   meow\n"
        "        (˚ˎ 。7 \n"
        "         |、˜〵\n"
        "        じしˍ,)ノ\n");
