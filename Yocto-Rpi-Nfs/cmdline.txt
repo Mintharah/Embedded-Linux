@@ -1,0 +1,1 @@
+dwc_otg.lpm_enable=0 root=/dev/nfs nfsroot=192.168.1.100:/srv/nfs/rpi,vers=3,tcp ip=dhcp rootwait  net.ifnames=0
