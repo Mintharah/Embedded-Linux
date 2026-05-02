@@ -1,0 +1,13 @@
+cd ~/yocto
+bitbake psplash -c cleansstate
+bitbake psplash -c unpack
+
+cd /home/yasmine/yocto/share/tmp/work/cortexa53-poky-linux/psplash/0.1+git/git/
+cp psplash.c psplash.c.orig
+cp ~/psplash/psplash.c .
+diff -u psplash.c.orig psplash.c | sed 's|psplash.c.orig|a/psplash.c|; s|psplash\.c\t|b/psplash.c\t|' > ~/yocto/meta-custom-image/recipes-core/psplash/files/animation.patch
+sed -i '1s/^/Upstream-Status: Inappropriate [embedded configuration]\n\n/' \
+    ~/yocto/meta-custom-image/recipes-core/psplash/files/animation.patch
+
+cd ~/yocto
+bitbake rpi3-custom-image

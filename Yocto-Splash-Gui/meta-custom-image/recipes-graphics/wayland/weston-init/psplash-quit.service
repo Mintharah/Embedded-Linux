@@ -1,0 +1,13 @@
+[Unit]
+Description=Quit psplash splash screen
+DefaultDependencies=no
+After=sysinit.target
+Before=weston.service graphical.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/sh -c 'if [ -p /tmp/psplash_fifo ]; then echo QUIT > /tmp/psplash_fifo; fi; sleep 1'
+
+[Install]
+WantedBy=graphical.target
