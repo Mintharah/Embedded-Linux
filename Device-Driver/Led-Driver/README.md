@@ -29,3 +29,6 @@ sudo rmmod led
 ```
 
 ---
+
+<img width="945" height="809" alt="image" src="https://github.com/user-attachments/assets/7c274b9f-c6d2-4ee3-b6d0-e068d822b1e7" />
+
